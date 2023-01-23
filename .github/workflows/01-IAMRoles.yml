@@ -1,0 +1,48 @@
+name: "01_IAMRoles"
+on:
+  workflow_dispatch:
+
+jobs:
+  Plan_Dev:
+    if: github.ref == 'refs/heads/FeatureBranch'
+    uses: coolblueraju/terraform-script-cicd/.github/workflows/aws_tf_plan.yml@FeatureBranch
+    with:
+      path: IAMRoles
+      tf_vars_file: dev.tfvars
+      gh_environment: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  Deploy_Dev:
+    needs: Plan_Dev
+    uses: coolblueraju/terraform-script-cicd/.github/workflows/aws_tf_appy.yml@FeatureBranch
+    with:
+      path: IAMRoles
+      tf_vars_file: dev.tfvars
+      gh_environment: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  Plan_Uat:
+    if: github.ref == 'refs/heads/main'
+    uses: coolblueraju/terraform-script-cicd/.github/workflows/aws_tf_plan.yml@main
+    with:
+      path: IAMRoles
+      tf_vars_file: uat.tfvars
+      gh_environment: uat
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  Deploy_Uat:
+    needs: Plan_Uat
+    uses: coolblueraju/terraform-script-cicd/.github/workflows/aws_tf_appy.yml@main
+    with:
+      path: IAMRoles
+      tf_vars_file: uat.tfvars
+      gh_environment: uat
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

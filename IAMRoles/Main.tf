@@ -6,7 +6,7 @@ terraform {
 	}
 
  backend "s3" {
-    bucket = "terraform-backend-datastore-23012023"
+    bucket = "terraform-backend-datastore-23012123"
     key    = "global/iamrole/terraform.tfstate"
     region = "us-east-1"
   }
